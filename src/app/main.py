@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 
@@ -6,12 +7,13 @@ from .model import predict_sentiment
 from .models import Prediction
 from .schemas import PredictRequest, PredictResponse
 
-app = FastAPI(title="ML Prediction API", version="1.0.0")
-
-
-@app.on_event("startup")
-def startup() -> None:
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    yield
+
+
+app = FastAPI(title="ML Prediction API", version="1.0.0", lifespan=lifespan)
 
 
 def get_db():

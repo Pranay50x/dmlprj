@@ -28,7 +28,13 @@ pip install -r requirements.txt -r requirements-dev.txt
 ### 2) Run the API locally
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn --app-dir src app.main:app --reload
+```
+
+Alternative (equivalent):
+
+```bash
+uvicorn src.app.main:app --reload
 ```
 
 The default database is SQLite when DATABASE_URL is not set.
