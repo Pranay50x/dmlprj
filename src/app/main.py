@@ -7,6 +7,7 @@ from .model import predict_sentiment
 from .models import Prediction
 from .schemas import PredictRequest, PredictResponse
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
