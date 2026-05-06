@@ -1,11 +1,14 @@
 import os
 import time
+import logging
 from typing import Optional
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import declarative_base, sessionmaker
+
+logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./local.db")
 
@@ -17,6 +20,13 @@ def _is_sqlite(url: str) -> bool:
 def _ensure_postgres_db(url: str, timeout: int = 30) -> None:
     parsed = make_url(url)
     if not parsed.drivername.startswith("postgresql"):
+        return
+
+    # Only attempt database creation for local/docker Postgres.
+    # Managed Postgres providers often disallow connecting to the default
+    # 'postgres' database or running CREATE DATABASE, and waiting here can
+    # slow down app startup.
+    if parsed.host not in {"db", "localhost", "127.0.0.1"}:
         return
 
     target_db = parsed.database
@@ -61,9 +71,11 @@ else:
     # If using Postgres, ensure the database exists before creating the engine
     try:
         _ensure_postgres_db(DATABASE_URL)
-    except Exception:
-        # Let the engine creation surface the original error during runtime
-        pass
+    except Exception as exc:
+        # Non-fatal: managed Postgres often disallows CREATE DATABASE, and in
+        # docker-compose Postgres may not be ready yet. The engine will still be
+        # created and normal DB errors will surface when used.
+        logger.info("Skipping database ensure step: %s", exc)
 
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, connect_args=connect_args)
