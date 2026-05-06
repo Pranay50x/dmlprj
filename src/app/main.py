@@ -14,7 +14,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="ML Prediction API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="ML Prediction API", version="1.0.1", lifespan=lifespan)
 
 
 def get_db():
