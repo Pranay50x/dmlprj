@@ -50,7 +50,9 @@ def _iter_unfeatured_predictions(db: Session, batch_size: int) -> Iterable[Predi
     return query.all()
 
 
-def run_feature_etl(db: Session, *, batch_size: int = 500, max_rows: int | None = None) -> ETLResult:
+def run_feature_etl(
+    db: Session, *, batch_size: int = 500, max_rows: int | None = None
+) -> ETLResult:
     processed = 0
 
     while True:
