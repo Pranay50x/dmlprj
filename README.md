@@ -100,7 +100,7 @@ If you want automated deployments only after CI passes:
 - Create a deploy hook on Render/Railway (or your host)
 - Add repository secret: DEPLOY_WEBHOOK_URL
 
-Without this secret, the Deploy workflow will fail by design (so you notice it is not configured).
+Without this secret, the Deploy workflow will skip the webhook call.
 
 ## Render (free-tier friendly) deployment: build from GitHub
 
