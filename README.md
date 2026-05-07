@@ -127,6 +127,20 @@ After this, a push to main will run CI; if it succeeds, GitHub Actions will POST
 ## Environment variables
 - DATABASE_URL (used by the API to connect to Postgres)
 
+### ETL (feature engineering)
+This project includes a simple ETL-style feature engineering step that converts raw prediction logs into a curated table.
+
+- Source table: `predictions`
+- Derived table: `prediction_features`
+
+Endpoints:
+- `POST /etl/features/run?max_rows=5000` — backfills features for predictions that don't have a feature row yet
+- `GET /etl/features/status` — shows counts (predictions, features, pending)
+- `GET /features?limit=20` — lists the most recent engineered feature rows
+
+Optional protection:
+- If you set `ETL_API_KEY`, then `POST /etl/features/run` requires header `X-ETL-API-KEY: <value>`.
+
 Example for docker-compose:
 ```
 DATABASE_URL=postgresql+psycopg2://app:app@db:5432/appdb
