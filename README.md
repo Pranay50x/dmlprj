@@ -1,12 +1,11 @@
-# Streaming ETL with Airflow (Local Postgres)
+# Streaming ETL Web Server (Local Postgres)
 
-This repository implements a streaming-style ETL pipeline using a public price API,
-FastAPI for inspection endpoints, and Airflow for ingestion + feature derivation.
-All data is stored in your local Postgres service on localhost:5432.
+This repository implements a streaming-style ETL pipeline using a public price API
+and FastAPI for ingestion + feature derivation. All data is stored in your local
+Postgres service on localhost:5432.
 
 ## What is included
 - FastAPI service that stores streaming price ticks
-- Airflow DAG that polls a public API every minute
 - ETL feature table derived from ticks
 - Dockerfile and docker-compose for the API service
 - CI pipeline: tests, linting, security scan
@@ -50,11 +49,6 @@ uvicorn --app-dir src app.main:app --reload
 docker compose up --build
 ```
 
-## Airflow
-
-Airflow lives in the [airflow](airflow) directory. See [airflow/README.md](airflow/README.md)
-to start the webserver + scheduler and run the streaming ETL DAG.
-
 ## Test, lint, security scan
 
 ```bash
@@ -71,3 +65,25 @@ bandit -r src -c bandit.yaml
 
 ## Optional Terraform
 See infra/README.md for the optional IaC example.
+
+## Optional Render CD (kept for CI/CD demonstration)
+This repo still includes a deploy workflow that can trigger a Render deploy hook.
+It is optional and not used for the local Airflow demo.
+
+### Render steps (optional)
+1) In Render: New + → Web Service
+2) Connect your GitHub repo
+3) Environment: choose Docker
+4) Branch: main
+5) Auto-Deploy: set to Off/Manual (CI controls deploy)
+6) Health Check Path: /health
+7) Environment variables (optional):
+	- DATABASE_URL: a Render Postgres URL for the web app (local demo uses localhost)
+
+### GitHub steps (optional)
+1) In Render service settings, create a Deploy Hook and copy its URL
+2) In GitHub repo settings → Secrets and variables → Actions:
+	- Add `DEPLOY_WEBHOOK_URL` with the Render deploy hook
+
+After this, a push to main runs CI; if it succeeds, GitHub Actions will POST the
+deploy hook and Render will redeploy the container.

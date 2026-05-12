@@ -1,6 +1,6 @@
 Since you’re looking for something with a smoother implementation curve that still hits those high-marks for a DevOps-focused project, I’d suggest shifting the focus from "Data Engineering" to **"Automated Infrastructure & Deployment."**
 
-This project focuses on the *delivery* of the application rather than the complex cleaning of the data itself. Below is the roadmap for:
+This project focuses on a lightweight web server plus an ETL pipeline that pulls streaming price data from Binance, transforms it, and loads it into Postgres. Below is the roadmap for:
 
 ## **Project Title: Automated CI/CD Pipeline for Secure Containerized Web Applications**
 
@@ -11,7 +11,7 @@ This project satisfies the requirements for the **Data Management for Machine Le
 ### **The Roadmap**
 
 #### **Phase 1: Containerization & Local Dev (Week 1)**
-*   **The App:** Build a simple FastAPI or Flask app that serves a pre-trained ML model (e.g., a basic sentiment analyzer)[cite: 1].
+*   **The App:** Build a simple FastAPI app to expose ingestion and status endpoints for the Binance price stream.[cite: 1]
 *   **Dockerization:** Write a `Dockerfile` to containerize the application.
 *   **Orchestration:** Use `docker-compose` to manage the app and a local PostgreSQL database for streaming tick storage[cite: 1].
 
@@ -27,7 +27,7 @@ This project satisfies the requirements for the **Data Management for Machine Le
 
 
 #### **Phase 4: The CD Pipeline (Continuous Deployment) (Week 5-6)**
-*   **Environment:** Keep deployment local for this iteration (local Postgres only).
+*   **Environment:** Use a platform like Render or Railway for CI/CD demonstration; local Postgres remains the demo data store.
 *   **Auto-Deploy:** Configure the pipeline so that a push to the `main` branch automatically triggers a new deployment of the Docker image[cite: 1].
 *   **Infrastructure as Code (IaC):** (Optional but impressive) Use a simple **Terraform** script to spin up your cloud resources[cite: 1].
 
