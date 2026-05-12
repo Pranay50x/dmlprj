@@ -13,7 +13,7 @@ This project satisfies the requirements for the **Data Management for Machine Le
 #### **Phase 1: Containerization & Local Dev (Week 1)**
 *   **The App:** Build a simple FastAPI or Flask app that serves a pre-trained ML model (e.g., a basic sentiment analyzer)[cite: 1].
 *   **Dockerization:** Write a `Dockerfile` to containerize the application.
-*   **Orchestration:** Use `docker-compose` to manage the app and a local database (like PostgreSQL or MongoDB) for logging predictions[cite: 1].
+*   **Orchestration:** Use `docker-compose` to manage the app and a local PostgreSQL database for streaming tick storage[cite: 1].
 
 #### **Phase 2: Version Control & Branching Strategy (Week 2)**
 *   **Setup:** Initialize a GitHub repository with a clear structure (`/src`, `/tests`, `/.github/workflows`)[cite: 1].
@@ -27,7 +27,7 @@ This project satisfies the requirements for the **Data Management for Machine Le
 
 
 #### **Phase 4: The CD Pipeline (Continuous Deployment) (Week 5-6)**
-*   **Environment:** Use a platform like **Render**, **Railway**, or **AWS App Runner** for easy deployment.
+*   **Environment:** Keep deployment local for this iteration (local Postgres only).
 *   **Auto-Deploy:** Configure the pipeline so that a push to the `main` branch automatically triggers a new deployment of the Docker image[cite: 1].
 *   **Infrastructure as Code (IaC):** (Optional but impressive) Use a simple **Terraform** script to spin up your cloud resources[cite: 1].
 

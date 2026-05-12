@@ -10,6 +10,10 @@ def client(tmp_path_factory):
     os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
 
     from app.main import app
+    from app.db import Base, engine
+
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
 
     with TestClient(app) as test_client:
         yield test_client

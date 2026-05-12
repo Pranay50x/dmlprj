@@ -4,34 +4,32 @@ from sqlalchemy.sql import func
 from .db import Base
 
 
-class Prediction(Base):
-    __tablename__ = "predictions"
+class PriceTick(Base):
+    __tablename__ = "price_ticks"
 
     id = Column(Integer, primary_key=True, index=True)
-    text = Column(String, nullable=False)
-    label = Column(String, nullable=False)
-    score = Column(Float, nullable=False)
+    symbol = Column(String, nullable=False, index=True)
+    price = Column(Float, nullable=False)
+    source = Column(String, nullable=False)
+    observed_at = Column(DateTime(timezone=True), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
 
-class PredictionFeature(Base):
-    __tablename__ = "prediction_features"
+class PriceTickFeature(Base):
+    __tablename__ = "price_tick_features"
 
     id = Column(Integer, primary_key=True, index=True)
-    prediction_id = Column(
+    tick_id = Column(
         Integer,
-        ForeignKey("predictions.id", ondelete="CASCADE"),
+        ForeignKey("price_ticks.id", ondelete="CASCADE"),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    text_length = Column(Integer, nullable=False)
-    word_count = Column(Integer, nullable=False)
-    has_url = Column(Boolean, nullable=False)
-    has_email = Column(Boolean, nullable=False)
-    exclamation_count = Column(Integer, nullable=False)
-    question_count = Column(Integer, nullable=False)
-    uppercase_ratio = Column(Float, nullable=False)
+    previous_price = Column(Float, nullable=True)
+    price_delta = Column(Float, nullable=True)
+    percent_change = Column(Float, nullable=True)
+    is_up = Column(Boolean, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

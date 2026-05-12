@@ -10,7 +10,10 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./local.db")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:my-new-password@localhost:5432/postgres",
+)
 
 
 def _is_sqlite(url: str) -> bool:
@@ -72,9 +75,7 @@ else:
     try:
         _ensure_postgres_db(DATABASE_URL)
     except Exception as exc:
-        # Non-fatal: managed Postgres often disallows CREATE DATABASE, and in
-        # docker-compose Postgres may not be ready yet. The engine will still be
-        # created and normal DB errors will surface when used.
+        # Non-fatal: local Postgres may not be ready yet.
         logger.info("Skipping database ensure step: %s", exc)
 
 
