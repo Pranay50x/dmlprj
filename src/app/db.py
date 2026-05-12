@@ -1,4 +1,3 @@
-import os
 import time
 import logging
 from typing import Optional
@@ -10,11 +9,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./local.db")
-
-
-def _is_sqlite(url: str) -> bool:
-    return url.startswith("sqlite")
+DATABASE_URL = "postgresql+psycopg2://postgres:my-new-password@localhost:5432/postgres"
 
 
 def _ensure_postgres_db(url: str, timeout: int = 30) -> None:
@@ -64,20 +59,14 @@ def _ensure_postgres_db(url: str, timeout: int = 30) -> None:
         raise last_exc
 
 
-connect_args = {}
-if _is_sqlite(DATABASE_URL):
-    connect_args = {"check_same_thread": False}
-else:
-    # If using Postgres, ensure the database exists before creating the engine
-    try:
-        _ensure_postgres_db(DATABASE_URL)
-    except Exception as exc:
-        # Non-fatal: managed Postgres often disallows CREATE DATABASE, and in
-        # docker-compose Postgres may not be ready yet. The engine will still be
-        # created and normal DB errors will surface when used.
-        logger.info("Skipping database ensure step: %s", exc)
+# If using Postgres, ensure the database exists before creating the engine
+try:
+    _ensure_postgres_db(DATABASE_URL)
+except Exception as exc:
+    # Non-fatal: local Postgres may not be ready yet.
+    logger.info("Skipping database ensure step: %s", exc)
 
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True, connect_args=connect_args)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

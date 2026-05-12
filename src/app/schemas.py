@@ -3,13 +3,20 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 
-class PredictRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=2000)
+class TickIngestRequest(BaseModel):
+    symbol: str = Field(..., min_length=1, max_length=20)
+    price: float
+    source: str = Field(..., min_length=1, max_length=50)
+    observed_at: datetime | None = None
 
 
-class PredictResponse(BaseModel):
-    label: str
-    score: float
+class TickRow(BaseModel):
+    id: int
+    symbol: str
+    price: float
+    source: str
+    observed_at: datetime
+    created_at: datetime
 
 
 class ETLRunResponse(BaseModel):
@@ -17,18 +24,15 @@ class ETLRunResponse(BaseModel):
 
 
 class ETLStatusResponse(BaseModel):
-    total_predictions: int
+    total_ticks: int
     total_features: int
-    pending_predictions: int
+    pending_ticks: int
 
 
-class FeatureRow(BaseModel):
-    prediction_id: int
-    text_length: int
-    word_count: int
-    has_url: bool
-    has_email: bool
-    exclamation_count: int
-    question_count: int
-    uppercase_ratio: float
+class TickFeatureRow(BaseModel):
+    tick_id: int
+    previous_price: float | None
+    price_delta: float | None
+    percent_change: float | None
+    is_up: bool | None
     created_at: datetime
